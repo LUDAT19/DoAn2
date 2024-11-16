@@ -1,0 +1,77 @@
+<%= stylesheet_link_tag 'theodoidonhang', media: 'all' %>
+<div class="container mt-4">
+  <div class="header-container">
+    <div class="back-button">
+      <%= link_to 'Quay lại', index2_path, class: 'btn-back' %>
+    </div>
+    <h2 class="page-title text-uppercase fw-bold">THEO DÕI ĐƠN HÀNG</h2>
+    <div class="placeholder"></div> <!-- Để cân bằng layout -->
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>TÊN SẢN PHẨM</th>
+          <th>SỐ LƯỢNG</th>
+          <th>ĐƠN GIÁ</th>
+          <th>TỔNG TIỀN</th>
+          <th>TRẠNG THÁI</th>
+          <th>THAO TÁC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @donhangs.present? %>
+          <% @donhangs.each do |donhang| %>
+              <tr>
+                <td><%= donhang.name %></td>
+                <td><%= donhang.soluong %></td>
+                <td class="text-primary fw-bold"><%= number_with_delimiter(donhang.dongia) %>đ</td>
+                <td class="fw-bold"><%= number_with_delimiter(donhang.soluong * donhang.dongia) %>đ</td>
+                <td>
+                  <% case donhang.trangthaidonhang %>
+                  <% when 'Đã hủy' %>
+                    <span class="status-badge status-cancelled">Đã hủy</span>
+                  <% when 'Chưa xác nhận' %>
+                    <span class="status-badge status-pending">Chưa xác nhận</span>
+                  <% when 'Đã xác nhận' %>
+                    <span class="status-badge status-confirmed">Đã xác nhận</span>  
+                  <% when 'Đang giao hàng' %>
+                    <span class="status-badge status-shipping">Đang giao hàng</span>
+                  <% when 'Đã giao hàng' %>
+                    <span class="status-badge status-delivered">Đã giao hàng</span>
+                  <% when 'Đã thanh toán' %>
+                    <span class="status-badge status-completed">Đã thanh toán</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if donhang.trangthaidonhang == 'Chưa xác nhận' %>
+                    <%= button_to 'Hủy đơn', 
+                        huy_don_hang_path(donhang), 
+                        method: :patch,
+                        class: 'btn-cancel active',
+                        data: { 
+                          confirm: 'Bạn có chắc chắn muốn hủy đơn hàng này không?',
+                          turbo_confirm: 'Bạn có chắc chắn muốn hủy đơn hàng này không?' 
+                        } %>
+                  <% else %>
+                    <button class="btn-cancel disabled" disabled>Hủy đơn</button>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+        <% else %>
+          <tr>
+            <td colspan="6" class="text-center py-4">Bạn chưa có đơn hàng nào</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  
+</div>
+
+
+
+

@@ -1,0 +1,282 @@
+<%= stylesheet_link_tag 'thongke', media: 'all', 'data-turbolinks-track': 'reload' %>
+<!-- Thêm nút quay lại ở đây -->
+<div class="back-button">
+  <%= link_to index3_path, class: "btn-back" do %>
+    <i class="fas fa-arrow-left"></i>
+    <span>Quay lại</span>
+  <% end %>
+</div>
+
+<div class="thongke-container">
+  <!-- Thống kê tổng quan -->
+  <div class="overview-section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon bg-primary">
+          <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="stat-content">
+          <h3>Tổng đơn hàng</h3>
+          <p class="stat-number"><%= @total_orders %></p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon bg-success">
+          <i class="fas fa-money-bill-wave"></i>
+        </div>
+        <div class="stat-content">
+          <h3>Doanh thu</h3>
+          <p class="stat-number"><%= number_to_currency(@total_revenue, unit: 'đ', precision: 0, delimiter: '.') %></p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon bg-info">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-content">
+          <h3>Khách hàng</h3>
+          <p class="stat-number"><%= @total_users %></p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon bg-warning">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-content">
+          <h3>Sản phẩm</h3>
+          <p class="stat-number"><%= @total_products %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Biểu đồ doanh thu và đơn hàng -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Doanh thu 7 ngày gần nhất (Đường)</h3>
+      <canvas id="revenueChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Số đơn hàng 7 ngày gần nhất</h3>
+      <canvas id="ordersChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Doanh thu 7 ngày gần nhất (Cột)</h3>
+      <canvas id="revenueBarChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Top sản phẩm và phân bố danh mục -->
+  <div class="details-grid">
+    <div class="detail-card">
+      <h3>Top 5 sản phẩm bán chạy</h3>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Đã bán</th>
+              <th>Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @top_products.each do |product| %>
+              <tr>
+                <td><%= product.name %></td>
+                <td><%= product.total_sold || 0 %></td>
+                <td><%= number_to_currency(product.revenue || 0, unit: 'đ', precision: 0, delimiter: '.') %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <h3>Phân bố sản phẩm theo danh mục</h3>
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Đơn hàng gần đây -->
+  <div class="recent-orders-section">
+    <div class="detail-card">
+      <h3>Đơn hàng gần đây</h3>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Khách hàng</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th>Ngày đặt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @recent_orders.each do |donhang| %>
+              <tr>
+                <td><%= donhang.tenchuthe %></td>
+                <td><%= number_to_currency(donhang.tongtien || 0, unit: 'đ', precision: 0, delimiter: '.') %></td>
+                <td>
+                  <span class="status-badge <%= donhang.trangthaidonhang&.downcase %>">
+                    <%= donhang.trangthaidonhang || 'Chưa xác nhận' %>
+                  </span>
+                </td>
+                <td><%= donhang.thoigiantao&.strftime("%d/%m/%Y %H:%M") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :styles do %>
+
+<% end %>
+
+<% content_for :scripts do %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Biểu đồ doanh thu (đường)
+  const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(revenueCtx, {
+    type: 'line',
+    data: {
+      labels: <%= raw @daily_revenue.keys.map { |date| date.strftime("%d/%m") }.to_json %>,
+      datasets: [{
+        label: 'Doanh thu',
+        data: <%= raw @daily_revenue.values.to_json %>,
+        borderColor: '#4e73df',
+        tension: 0.1,
+        fill: false
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString('vi-VN') + ' đ';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Biểu đồ số đơn hàng
+  const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+  new Chart(ordersCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= raw @daily_orders.keys.map { |date| date.strftime("%d/%m") }.to_json %>,
+      datasets: [{
+        label: 'Số đơn hàng',
+        data: <%= raw @daily_orders.values.to_json %>,
+        backgroundColor: '#1cc88a',
+        borderColor: '#1cc88a',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
+  // Biểu đồ doanh thu (cột)
+  const revenueBarCtx = document.getElementById('revenueBarChart').getContext('2d');
+  new Chart(revenueBarCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= raw @daily_revenue.keys.map { |date| date.strftime("%d/%m") }.to_json %>,
+      datasets: [{
+        label: 'Doanh thu',
+        data: <%= raw @daily_revenue.values.to_json %>,
+        backgroundColor: '#4e73df',
+        borderColor: '#4e73df',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString('vi-VN') + ' đ';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Biểu đồ phân bố danh mục (pie chart)
+  const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+  new Chart(categoryCtx, {
+    type: 'pie',
+    data: {
+      labels: <%= raw @category_distribution.keys.to_json %>,
+      datasets: [{
+        data: <%= raw @category_distribution.values.to_json %>,
+        backgroundColor: [
+          '#4e73df', // blue
+          '#1cc88a', // green
+          '#36b9cc', // cyan
+          '#f6c23e', // yellow
+          '#e74a3b', // red
+          '#858796', // gray
+          '#5a5c69', // dark gray
+          '#2e59d9', // dark blue
+          '#17a673', // dark green
+          '#2c9faf'  // dark cyan
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            padding: 20,
+            font: {
+              size: 12
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.label || '';
+              let value = context.raw || 0;
+              let total = context.dataset.data.reduce((a, b) => a + b, 0);
+              let percentage = Math.round((value * 100) / total) + '%';
+              return `${label}: ${value} sản phẩm (${percentage})`;
+            }
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+<% end %> 

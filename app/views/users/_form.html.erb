@@ -1,0 +1,50 @@
+<%= form_with(model: user, local: true) do |f| %>
+  <% if user.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(user.errors.count, "lỗi") %> đã xảy ra:</h4>
+      <ul>
+        <% user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :username, "Tên đăng nhập" %>
+    <%= f.text_field :username, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :password_pidget, "Mật khẩu" %>
+    <%= f.password_field :password_pidget, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :loai_quyen, "Loại quyền" %>
+    <%= f.select :loai_quyen, 
+        [['Admin', 'admin'], ['User', 'user']], 
+        { prompt: "Chọn loại quyền" }, 
+        { class: "form-control" } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :solandnthatbai, "Số lần đăng nhập thất bại" %>
+    <%= f.number_field :solandnthatbai, class: "form-control", min: 0 %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :isclock, "Trạng thái khóa" %>
+    <%= f.check_box :isclock, class: "form-check-input" %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit user.new_record? ? "Thêm tài khoản" : "Cập nhật tài khoản", class: "btn btn-primary" %>
+    <%= link_to "Hủy", users_path, class: "btn btn-secondary" %>
+  </div>
+<% end %> 

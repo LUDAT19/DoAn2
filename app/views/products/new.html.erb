@@ -1,0 +1,60 @@
+<%= stylesheet_link_tag 'product_form', media: 'all' %>
+<div class="product-form-container">
+  <div class="header-container">
+    <h2>Thêm Sản Phẩm Mới</h2>
+  </div>
+
+  <%= form_with(model: @product, local: true) do |f| %>
+    <% if @product.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@product.errors.count, "lỗi") %> đã xảy ra:</h4>
+        <ul>
+          <% @product.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.label :name, "Tên sản phẩm" %>
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :id_dm, "Danh mục sản phẩm" %>
+      <%= f.collection_select :id_dm, @danhmuc_options, :id, :ten_danhmuc, 
+          { prompt: "Chọn danh mục" }, 
+          { class: "form-control" } %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :mota, "Mô tả" %>
+      <%= f.text_area :mota, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :price, "Giá" %>
+      <%= f.number_field :price, class: "form-control", step: "0.01" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :soluong, "Số lượng" %>
+      <%= f.number_field :soluong, class: "form-control", min: 0 %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :image_path, "Hình ảnh" %>
+      <%= f.select :image_path, 
+          @image_files.map { |file| [file, file] },
+          { prompt: "Chọn hình ảnh" },
+          { class: "form-control" }
+      %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit "Thêm sản phẩm", class: "btn btn-primary" %>
+      <%= link_to "Quay lại", "#", onclick: "history.back(); return false;", class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div> 

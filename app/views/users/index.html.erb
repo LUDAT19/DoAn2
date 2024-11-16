@@ -1,0 +1,71 @@
+<%= stylesheet_link_tag 'users', media: 'all' %>
+
+
+<div class="user-container">
+  <div class="header-container">
+    <div class="header-left">
+      <%= link_to 'Quay lại', index3_path, class: 'btn btn-secondary' %>
+    </div>
+    <div class="header-center">
+      <h2>Quản Lý Tài Khoản</h2>
+    </div>
+    <div class="header-right">
+      <%= link_to 'Thêm Tài Khoản', new_user_path, class: 'btn btn-primary' %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success"><%= notice %></div>
+  <% end %>
+
+  <% if alert %>
+    <div class="alert alert-danger"><%= alert %></div>
+  <% end %>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Mật khẩu</th>
+        <th>Loại quyền</th>
+        <th>Số lần đăng nhập sai</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.username %></td>
+          <td><%= user.email %></td>
+          <td><span class="password-dots">•••••••</span></td>
+          <td>
+            <span class="badge badge-quyen badge-<%= user.loai_quyen %>">
+              <%= case user.loai_quyen
+                  when 'admin' then 'Admin'
+                  when 'staff' then 'Nhân viên'
+                  when 'customer' then 'Khách hàng'
+                  end %>
+            </span>
+          </td>
+          <td><%= user.solandnthatbai || 0 %></td>
+          
+          <td>
+            <% case user.loai_quyen %>
+            <% when 'admin' %>
+              <%= link_to edit_user_path(user), class: 'btn btn-sm btn-info' do %>
+                <i class="fas fa-eye"></i> Xem
+              <% end %>
+            <% when 'staff', 'customer' %>
+              <%= link_to 'Sửa', edit_user_path(user), class: 'btn btn-sm btn-warning' %>
+              <%= button_to 'Xóa', user_path(user), 
+                  method: :delete,
+                  form: { data: { turbo_confirm: 'Bạn có chắc chắn muốn xóa tài khoản này?' } },
+                  class: 'btn btn-sm btn-danger' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div> 

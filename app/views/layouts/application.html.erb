@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Trang chủ - Thuốc Thú Y" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-1F4SxNC7LyDN+H5KflxPeBOH0h8iyWeS0hhc1HXPaNz+48NYlZklk1Ml2YpWtpdiUDF8y+7gNlvD9/WZ/Wf5vw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <%= stylesheet_link_tag "application1", media: 'all', "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "trangchuadmin", media: 'all', "data-turbo-track": "reload" %>
+    <%# <%= javascript_tag "application", media: 'all', "data-turbo-track": "reload" %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+     <!-- Thêm CSS của Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Thêm jQuery và Select2 JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <%= stylesheet_link_tag 'buy_now_modal', media: 'all', 'data-turbolinks-track': 'reload' %>
+     <%= stylesheet_link_tag 'buy_now_modal', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <% if flash[:notice] %>
+      <p class="notice"><%= flash[:notice] %></p>
+    <% end %>
+ 
+    <%= yield %>
+    <%= yield :scripts %>
+  </body>
+</html>
+
+  <%# <% if flash[:alert] %>
+  <%# <p class="alert"><%= flash[:alert] %></p>
+  <%# <% end %> 
+
+  <%= javascript_tag 'password_validation' %>
+  <%= javascript_tag 'account_lock' %>
+  <%= javascript_tag "custom/lock_account" %>
+
+  <style>
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+  </style>
+
+  <%# <span id="cart-count">
+    <%= session[:cart]&.sum { |item| item["quantity"].to_i } || 0 
+  </span> %>
+
+  <%# <% debug @daily_revenue %>
+  <%# <%= debug @daily_orders %> 

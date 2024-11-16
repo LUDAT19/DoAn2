@@ -1,0 +1,128 @@
+<%= stylesheet_link_tag 'edit' %>
+<!-- Hiển thị thông báo lỗi nếu có -->
+ <% if flash.now[:alert] %>
+    <div class="alert" id="alert-message">
+      <%= flash.now[:alert] %>
+      <a href="#" class="close" onclick="this.parentElement.style.display='none'; return false;">&times;</a>
+    </div>
+  <% end %>
+  <div class="login-form">
+    <h1>Đặt Lại Mật Khẩu</h1>
+    <%= form_with(url: update_password_reset_path(token: params[:token]), method: :patch, id: 'password-reset-form') do %>
+      <div class="form-group">
+        <p>Thời gian còn lại để đặt lại mật khẩu: <span id="countdown">1:00</span></p>
+      </div>
+      <div class="form-group">
+        <label for="password">Mật Khẩu Mới:</label>
+        <%= password_field_tag :password, nil, class: 'form-control'%>
+        <span class="error-message" id="password-error" style="display: none; color: red;"></span>
+      </div>
+      <div class="form-group">
+        <label for="password_confirmation">Xác Nhận Mật Khẩu:</label>
+        <%= password_field_tag :password_confirmation, nil, class: 'form-control' %>
+        <span class="error-message" id="confirm-password-error" style="display: none; color: red;"></span>
+      </div>
+      <div class="form-group">
+        <%= hidden_field_tag :token, params[:token] %>
+        <%= submit_tag "Cập Nhật", class: 'btn btn-primary' %>
+      </div>
+  </div>
+  <script>
+    var upgradeTime = 60; // Thời gian đếm ngược (giây)
+    var seconds = localStorage.getItem("countdown");
+
+    // Kiểm tra xem giá trị từ localStorage có phải là số hợp lệ không
+    if (seconds === null || isNaN(seconds)) {
+      seconds = upgradeTime; // Nếu không, đặt lại thành thời gian ban đầu
+    } else {
+      seconds = parseInt(seconds); // Chuyển đổi thành số nguyên
+    }
+
+    var countdownElement = document.getElementById('countdown');
+
+    function timer() {
+      var minutes = Math.floor(seconds / 60);
+      var remainingSeconds = seconds % 60;
+
+      function pad(n) {
+        return (n < 10 ? "0" + n : n);
+      }
+
+      countdownElement.innerHTML = pad(minutes) + ":" + pad(remainingSeconds);
+
+      if (seconds <= 0) {
+        clearInterval(countdownTimer);
+        countdownElement.innerHTML = "Đã hoàn thành";
+        localStorage.removeItem("countdown"); // Xóa giá trị khi đã hoàn thành
+      } else {
+        seconds--;
+        localStorage.setItem("countdown", seconds); // Cập nhật giá trị đếm ngược vào localStorage
+      }
+    }
+
+    var countdownTimer = setInterval(timer, 1000);
+
+    // Xử lý sự kiện khi bấm nút "Cập Nhật"
+    document.getElementById('password-reset-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Ngăn form submit mặc định
+      
+      // Lấy giá trị từ các trường input
+      const password = document.getElementById('password').value;
+      const passwordConfirmation = document.getElementById('password_confirmation').value;
+      
+      // Reset các thông báo lỗi
+      document.getElementById('password-error').style.display = 'none';
+      document.getElementById('confirm-password-error').style.display = 'none';
+      
+      let hasError = false;
+
+      // Kiểm tra mật khẩu trống
+      if (!password) {
+        document.getElementById('password-error').textContent = 'Vui lòng nhập mật khẩu mới';
+        document.getElementById('password-error').style.display = 'block';
+        hasError = true;
+      }
+      
+      // Kiểm tra xác nhận mật khẩu trống
+      if (!passwordConfirmation) {
+        document.getElementById('confirm-password-error').textContent = 'Vui lòng xác nhận mật khẩu';
+        document.getElementById('confirm-password-error').style.display = 'block';
+        hasError = true;
+      }
+      
+      // Kiểm tra mật khẩu có đủ yêu cầu không
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/;
+      if (password && !passwordRegex.test(password)) {
+        document.getElementById('password-error').textContent = 'Mật khẩu phải có ít nhất 8 ký tự, 1 chữ in hoa và 1 ký tự đặc biệt';
+        document.getElementById('password-error').style.display = 'block';
+        hasError = true;
+      }
+      
+      // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp nhau không
+      if (password && passwordConfirmation && password !== passwordConfirmation) {
+        document.getElementById('confirm-password-error').textContent = 'Mật khẩu xác nhận không khớp';
+        document.getElementById('confirm-password-error').style.display = 'block';
+        hasError = true;
+      }
+      
+      // Nếu không có lỗi thì submit form
+      if (!hasError) {
+        this.submit();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var closeButtons = document.querySelectorAll('.alert .close');
+      
+      closeButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          var alert = this.closest('.alert');
+          if (alert) {
+            alert.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+<% end %>

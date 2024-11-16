@@ -1,0 +1,598 @@
+<div class="checkout-container">
+  <!-- Thêm phần hiển thị thông báo -->
+  <% if flash[:error] %>
+    <div class="alert alert-danger">
+      <%= flash[:error] %>
+    </div>
+  <% end %>
+
+  <% if flash[:success] %>
+    <div class="alert alert-success">
+      <%= flash[:success] %>
+    </div>
+  <% end %>
+
+  <div class="checkout-layout">
+    <%= form_with(url: create_order_path, local: true, class: 'checkout-form') do |f| %>
+      <div class="checkout-left">
+        <h2 style="font-size: 20px; font-weight: 900; color: red; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; text-align: center; ">THÔNG TIN ĐẶT HÀNG</h2>
+        <div class="form-section">
+          <h3>Thông tin người đặt hàng</h3>
+          <%= f.hidden_field :customer_name, value: @user.username %>
+          <%= f.hidden_field :customer_email, value: @user.email %>
+          <%= f.hidden_field :id_sp, value: @product.id %>
+          <%= f.hidden_field :tongtien, value: @total %>
+          <%= f.hidden_field :quantity, value: @quantity %>
+          
+          <!-- Hiển thị thông tin readonly -->
+          <div class="form-group">
+            <label>Họ và tên</label>
+            <input type="text" value="<%= @user.username %>" readonly class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Số điện thoại</label>
+            <input type="text" id="order_phone" value="<%= current_user.sdt %>" readonly class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" value="<%= @user.email %>" readonly class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ</label>
+            <input type="text" id="order_address" value="<%= current_user.diachi %>" readonly class="form-control">
+          </div>
+        </div>
+        <div class="checkout-summary-right">
+        <!-- Thông tin đơn hàng -->
+        <div class="form-section order-summary">
+          <h2 style="font-size: 18px; font-weight: 500; color: #333; margin-bottom: 15px;">Thông tin đơn hàng</h2>
+          <table class="order-details">
+            <thead>
+              <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="product-image">
+                  <%= image_tag "/assets/#{@product.image_path}" if @product.image_path.present? %>
+                </td>
+                <td><%= @product.name %></td>
+                <td><%= @quantity %></td>
+                <td><%= number_to_currency(@product.price, unit: 'đ', precision: 0, delimiter: '.') %></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="order-total">
+            <span class="total-label">Tổng tiền:</span>
+            <span style="color: red;;" class="total-amount"><%= number_to_currency(@total, unit: 'đ', precision: 0, delimiter: '.') %></span>
+          </div>
+
+          <%= f.hidden_field :id_sp, value: @product.id %>
+          <%= f.hidden_field :tongtien, value: @total %>
+
+          
+        </div>
+      </div>
+
+      <div class="checkout-right">
+        <!-- Thông tin người nhận -->
+          <h3 style="font-size: 16px; font-weight: 500; color: #333; margin-bottom: 15px;">Thông tin người nhận</h3>
+        <div class="form-section">
+        
+          <div class="form-group">
+            <input type="checkbox" id="sameAsOrder" onchange="copyOrderInfo(this)">
+            <label for="sameAsOrder">Thông tin người nhận</label>
+          </div>
+          <div class="form-group">
+            <label>Số điện thoại</label>
+            <%= f.text_field :receiver_phone, class: 'form-control', required: true, id: 'receiver_phone' %>
+          </div>
+          <div class="form-group">
+            <label>Địa chỉ nhận hàng</label>
+            <%= f.text_field :receiver_address, class: 'form-control', required: true, id: 'receiver_address' %>
+          </div>
+        </div>
+
+        <!-- Phương thức thanh toán -->
+        <div class="form-section">
+          <h3 style="font-size: 16px; font-weight: 500; color: #333; margin-bottom: 15px;">Phương thức thanh toán</h3>
+          <div class="payment-methods">
+            <div class="payment-method-option">
+              <%= f.radio_button :payment_method, 'thanh_toan_khi_nhan_hang', checked: true %>
+              <label for="payment_method_thanh_toan_khi_nhan_hang">
+                <span class="payment-icon">💵</span>
+                Thanh toán khi nhận hàng
+              </label>
+            </div>
+
+            <div class="payment-method-option">
+              <%= f.radio_button :payment_method, 'thanh_toan_the' %>
+              <label for="payment_method_thanh_toan_the">
+                <span class="payment-icon">💳</span>
+                Thanh toán bằng thẻ ngân hàng
+              </label>
+            </div>
+          </div>
+
+          <!-- Form thông tin thẻ -->
+          <div id="bank_payment_form" style="display: none;" class="card-form">
+            <div class="form-group">
+              <label>Chọn ngân hàng</label>
+              <%= f.select :tennganhang, 
+                options_for_select([
+                  ['-- Chọn ngân hàng --', ''],
+                  ['Vietcombank', 'Vietcombank'],
+                  ['Techcombank', 'Techcombank'],
+                  ['Vietinbank', 'Vietinbank'],
+                  ['BIDV', 'BIDV'],
+                  ['Agribank', 'Agribank'],
+                  ['MB Bank', 'MB Bank'],
+                  ['ACB', 'ACB'],
+                  ['Sacombank', 'Sacombank'],
+                  ['VPBank', 'VPBank'],
+                  ['TPBank', 'TPBank']
+                ]), 
+                {}, 
+                { class: 'form-control bank-select' } 
+              %>
+            </div>
+
+            <div class="form-group">
+              <label>Số thẻ</label>
+              <%= f.text_field :card_number, class: 'form-control', placeholder: '1234 5678 9012 3456', maxlength: 19 %>
+            </div>
+
+            <div class="form-group">
+              <label>Tên chủ thẻ</label>
+              <%= f.text_field :card_name, class: 'form-control', placeholder: 'NGUYEN VAN A' %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phần buttons -->
+        <div class="button-group">
+          <%= link_to 'javascript:history.back()', class: "btn btn-secondary" do %>
+            <i class="fas fa-arrow-left"></i> Quay lại
+          <% end %>
+          <%= f.submit "Đặt hàng", class: "btn btn-primary", data: { disable_with: 'Đang xử lý...' } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .checkout-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  .checkout-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .checkout-left {
+    grid-column: 1;
+  }
+
+  .checkout-right {
+    grid-column: 2;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+  }
+
+  .form-section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .form-section h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  /* Payment methods */
+  .payment-methods {
+    margin-top: 10px;
+  }
+
+  .payment-method {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  .order-button {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .checkout-layout {
+      grid-template-columns: 1fr;
+    }
+    
+    .checkout-right {
+      position: static;
+      width: 100%;
+    }
+  }
+
+  /* Style cho phần thông tin đơn hàng */
+  .order-info {
+    margin-top: 25px;
+  }
+
+  .order-info h3 {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* Table styles */
+  .order-details {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  .order-details th,
+  .order-details td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+  }
+
+  .order-details th {
+    background: #f8f9fa;
+    font-weight: 500;
+  }
+
+  /* Điều chỉnh độ rộng các cột */
+  .order-details th:first-child,
+  .order-details td:first-child {
+    width: 100px;
+  }
+
+  .order-details th:nth-child(3),
+  .order-details td:nth-child(3),
+  .order-details th:nth-child(4),
+  .order-details td:nth-child(4) {
+    width: 120px;
+    text-align: right;
+  }
+
+  /* Cột số lượng và đơn giá */
+  .order-details th:nth-child(2),
+  .order-details td:nth-child(2),
+  .order-details th:nth-child(3),
+  .order-details td:nth-child(3) {
+    text-align: right;
+    width: 100px;
+  }
+
+  /* Tổng tiền */
+  .order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 8px;
+    margin-top: 10px;
+    border-top: 2px solid #eee;
+  }
+
+  .total-label {
+    font-weight: bold;
+  }
+
+  /* Checkbox style */
+  .form-group input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .form-group input[type="checkbox"] + label {
+    cursor: pointer;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .form-group input[type="checkbox"]:checked + label {
+    color: #4CAF50;
+  }
+
+  /* Style cho trường readonly */
+  .readonly-field {
+    background-color: #f8f9fa !important;
+    cursor: not-allowed !important;
+    border-color: #e0e0e0 !important;
+    color: #666 !important;
+  }
+
+  /* Style chung cho form */
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 6px;
+  }
+
+  /* Style cho input readonly từ CSDL */
+  input[readonly],
+  input[readonly].form-control {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px 12px;
+    width: 100%;
+    font-size: 14px;
+    color: #333;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Hover effect cho readonly */
+  input[readonly]:hover {
+    border-color: #e0e0e0;
+    background-color: #f8f9fa;
+  }
+
+  /* Focus effect cho readonly */
+  input[readonly]:focus {
+    outline: none;
+    border-color: #e0e0e0;
+    box-shadow: none;
+  }
+
+  /* Style cho labels */
+  label {
+    font-weight: 500;
+    color: #555;
+  }
+
+  /* Style riêng cho từng loại input */
+  input[name="customer_name"],
+  input[name="customer_phone"],
+  input[name="customer_email"],
+  input[name="customer_address"] {
+    font-family: inherit;
+    letter-spacing: 0.3px;
+  }
+
+  /* Payment method styles */
+  .payment-methods {
+    margin-bottom: 20px;
+  }
+
+  .payment-method-option {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .payment-method-option:hover {
+    background-color: #f8f9fa;
+  }
+
+  .payment-method-option input[type="radio"] {
+    margin-right: 10px;
+  }
+
+  .payment-method-option label {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .payment-icon {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+
+  /* Bank payment form */
+  .card-form {
+    margin-top: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+  }
+
+  .bank-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    color: #333;
+  }
+
+  /* Active state for payment method */
+  .payment-method-option input[type="radio"]:checked + label {
+    color: #4CAF50;
+  }
+
+  .payment-method-option input[type="radio"]:checked + label .payment-icon {
+    color: #4CAF50;
+  }
+
+  /* Thêm style cho ảnh sản phẩm */
+  .product-image {
+    width: 100px;
+    padding: 8px;
+  }
+
+  .product-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eee;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn i {
+    margin-right: 8px;
+  }
+
+  .btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #45a049;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+
+  /* Hiệu ứng khi nhấn */
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Style cho trạng thái disabled */
+  .btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .checkout-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-right {
+      width: 100%;
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  function copyOrderInfo(checkbox) {
+    const orderPhone = document.getElementById('order_phone').value;
+    const orderAddress = document.getElementById('order_address').value;
+    
+    const receiverPhone = document.getElementById('receiver_phone');
+    const receiverAddress = document.getElementById('receiver_address');
+    
+    if (checkbox.checked) {
+      // Copy thông tin từ người đặt sang người nhận
+      receiverPhone.value = orderPhone;
+      receiverAddress.value = orderAddress;
+      
+      // Thêm readonly attribute khi checkbox được check
+      receiverPhone.setAttribute('readonly', true);
+      receiverAddress.setAttribute('readonly', true);
+    } else {
+      // Xóa thông tin và bỏ readonly khi bỏ check
+      receiverPhone.value = '';
+      receiverAddress.value = '';
+      receiverPhone.removeAttribute('readonly');
+      receiverAddress.removeAttribute('readonly');
+    }
+  }
+    
+  // Toggle bank payment form
+  document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const bankForm = document.getElementById('bank_payment_form');
+      if (this.value === 'thanh_toan_the') {
+        bankForm.style.display = 'block';
+      } else {
+        bankForm.style.display = 'none';
+      }
+    });
+  });
+
+
+  
+</script> 

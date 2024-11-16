@@ -1,0 +1,432 @@
+<div class="orders-container">
+  <div class="orders-header">
+    <div class="header-left">
+      <button class="back-btn" onclick="window.location.href='/index3'">
+        <i class="fas fa-arrow-left"></i>
+        Quay lại
+      </button>
+    </div>
+    <h2>Danh sách đơn hàng</h2>
+    <div class="filter-box">
+      <select id="statusFilter" class="status-select">
+        <option value="">Tất cả trạng thái</option>
+        <option value="Chưa xác nhận">Chưa xác nhận</option>
+        <option value="Đã xác nhận">Đã xác nhận</option>
+        <option value="Đang giao hàng">Đang giao hàng</option>
+        <option value="Đã giao hàng">Đã giao hàng</option>
+        <option value="Đã thanh toán">Đã thanh toán</option>
+        <option value="Đã hủy">Đã hủy</option>
+      </select>
+      <i class="fas fa-filter"></i>
+    </div>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th width="13%">Khách hàng</th>
+          <th width="11%">Số điện thoại</th>
+          <th width="13%">Email</th>
+          <th width="20%">Địa chỉ</th>
+          <th width="20%">Phương thức thanh toán</th>
+          <th width="15%">Trạng thái</th>
+          <th width="8%">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @donhangs.each do |donhang| %>
+          <tr class="order-row">
+            <td class="customer-name"><%= donhang.username %></td>
+            <td class="phone-number"><%= donhang.sdt_nn %></td>
+            <td class="email"><%= donhang.email %></td>
+            <td class="address"><%= donhang.diachi_nn %></td>
+            <td class="payment-method"><%= donhang.phuongthucthanhtoan %></td>
+            <td class="status-cell">
+              <span class="status-badge <%= donhang.trangthaidonhang.downcase %>">
+                <%= donhang.trangthaidonhang %>
+              </span>
+            </td>
+            <td class="actions">
+              <button class="action-btn view-btn" onclick="window.location.href='<%= donhang_path(donhang) %>'">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+/* Container styles */
+.orders-container {
+  max-width: 1700px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+/* Header section */
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.header-left {
+  width: 150px;
+}
+
+.orders-header h2 {
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.filter-box {
+  width: 150px;
+}
+
+/* Filter box */
+.status-select {
+  width: 100%;
+  padding: 10px 0 10px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: white;
+  cursor: pointer;
+  color: #2c3e50;
+}
+
+.status-select:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.1);
+}
+
+.filter-box i {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #95a5a6;
+  pointer-events: none;
+}
+
+/* Table styles */
+.table-responsive {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  table-layout: fixed;
+}
+
+.table th, .table td {
+  padding: 15px 20px;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.table td {
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+  font-size: 15px;
+}
+
+/* Cell styles */
+.customer-name {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.phone-number {
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.email {
+  color: #3498db;
+}
+
+.address {
+  color: #555;
+}
+
+.payment-method {
+  color: #7f8c8d;
+  text-transform: capitalize;
+}
+
+.status-cell {
+  text-align: center;
+}
+
+/* Row styles */
+.order-row {
+  transition: all 0.2s ease;
+}
+
+.order-row:hover {
+  background-color: #f8f9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Status badges */
+.status-badge {
+  padding: 8px 15px;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.cho_xac_nhan {
+  background-color: #fff8e1;
+  color: #f39c12;
+  border: 1px solid #ffeeba;
+}
+
+.da_xac_nhan {
+  background-color: #e8f5e9;
+  color: #27ae60;
+  border: 1px solid #c8e6c9;
+}
+
+.dang_giao {
+  background-color: #e3f2fd;
+  color: #2980b9;
+  border: 1px solid #bbdefb;
+}
+
+.da_giao {
+  background-color: #e8f5e9;
+  color: #2ecc71;
+  border: 1px solid #c8e6c9;
+}
+
+.da_huy {
+  background-color: #ffebee;
+  color: #e74c3c;
+  border: 1px solid #ffcdd2;
+}
+
+/* Hover effects */
+.status-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Responsive design */
+@media (max-width: 1400px) {
+  .orders-container {
+    margin: 20px;
+  }
+  
+  .table {
+    table-layout: auto;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .btn {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 992px) {
+  .orders-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .header-left, .filter-box {
+    width: 100%;
+  }
+  
+  .orders-header h2 {
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .orders-container {
+    padding: 15px;
+    margin: 10px;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+  
+  .status-badge {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-width: 90px;
+  }
+  
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Styles cho các nút thao tác */
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn i {
+  font-size: 16px;
+  color: white;
+}
+
+.view-btn {
+  background-color: #3498db;
+}
+
+.view-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .action-btn i {
+    font-size: 14px;
+  }
+}
+
+/* Thêm styles cho header-left và nút quay lại */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 25px;
+  color: #2c3e50;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #e9ecef;
+  transform: translateX(-2px);
+}
+
+.back-btn i {
+  font-size: 14px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusFilter = document.getElementById('statusFilter');
+    const orderRows = document.querySelectorAll('.order-row');
+
+    statusFilter.addEventListener('change', function() {
+        const selectedStatus = this.value;
+        
+        orderRows.forEach(row => {
+            const statusBadge = row.querySelector('.status-badge');
+            const currentStatus = statusBadge.textContent.trim();
+            
+            if (!selectedStatus || currentStatus === selectedStatus) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script> 

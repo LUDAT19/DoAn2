@@ -1,0 +1,59 @@
+ <div class="payment-methods">
+                <div class="payment-method-option">
+                    <input type="radio" 
+                           id="thanh_toan_khi_nhan_hang" 
+                           name="payment_method" 
+                           value="thanh_toan_khi_nhan_hang">
+                    <label for="thanh_toan_khi_nhan_hang">
+                        <span class="payment-icon cod">
+                            💵
+                        </span>
+                        Thanh toán khi nhận hàng
+                    </label>
+                </div>
+
+                <div class="payment-method-option">
+                    <input type="radio" 
+                           id="thanh_toan_the" 
+                           name="payment_method" 
+                           value="thanh_toan_the">
+                    <label for="thanh_toan_the">
+                        <span class="payment-icon card">
+                            💳
+                        </span>
+                        Thanh toán bằng thẻ ngân hàng
+                    </label>
+                </div>
+            </div>
+
+            <!-- Form thông tin thẻ -->
+            <div id="credit_card_form" style="display: none;" class="card-form">
+                <div class="form-group">
+                    <label for="bank_name">Chọn ngân hàng</label>
+                    <div class="bank-select-container">
+                        <select id="bank_name" class="form-control bank-select">
+                            <option value="">-- Chọn ngân hàng --</option>
+                            <option value="Vietcombank">Vietcombank</option>
+                            <option value="Techcombank">Techcombank</option>
+                            <option value="Vietinbank">Vietinbank</option>
+                            <option value="BIDV">BIDV</option>
+                            <option value="Agribank">Agribank</option>
+                            <option value="MB Bank">MB Bank</option>
+                            <option value="ACB">ACB</option>
+                            <option value="Sacombank">Sacombank</option>
+                            <option value="VPBank">VPBank</option>
+                            <option value="TPBank">TPBank</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card_number">Số thẻ</label>
+                    <input type="text" id="card_number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+
+                <div class="form-group">
+                    <label for="card_name">Tên chủ thẻ</label>
+                    <input type="text" id="card_name" class="form-control" placeholder="NGUYEN VAN A">
+                </div>
+            </div>  

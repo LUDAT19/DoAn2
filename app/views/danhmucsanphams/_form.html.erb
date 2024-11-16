@@ -1,0 +1,26 @@
+<%= form_with(model: @danhmuc, local: true) do |f| %>
+  <% if @danhmuc.errors.any? %>
+    <div class="alert alert-danger">
+      <% if @danhmuc.errors[:ten_danhmuc].include?("đã tồn tại trong hệ thống") %>
+        <p>Danh mục "<%= @danhmuc.ten_danhmuc %>" đã tồn tại trong hệ thống!</p>
+      <% else %>
+        <h4><%= pluralize(@danhmuc.errors.count, "lỗi") %> đã xảy ra:</h4>
+        <ul>
+          <% @danhmuc.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :ten_danhmuc, "Tên danh mục" %>
+    <%= f.text_field :ten_danhmuc, class: "form-control" %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Thêm danh mục", class: "btn btn-primary" %>
+    <%= link_to "Quay lại", "#", onclick: "history.back(); return false;", class: "btn btn-secondary" %>
+  </div>
+<% end %> 

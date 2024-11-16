@@ -1,0 +1,95 @@
+.account-container {
+    padding: 20px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-left {
+    width: 150px;
+}
+
+.header-center {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.header-right {
+    width: 150px;
+    text-align: right;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-check-input {
+    margin-left: 10px;
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 0.875rem;
+    margin: 0 2px;
+    display: inline-block;
+}
+
+form.button_to {
+    display: inline-block;
+}
+
+form.button_to div {
+    display: inline;
+}
+
+.password-dots {
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #666;
+    font-weight: bold;
+}

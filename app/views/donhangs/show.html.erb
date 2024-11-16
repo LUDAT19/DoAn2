@@ -1,0 +1,298 @@
+<div class="order-detail-container">
+  <div class="order-header">
+    <h1>CHI TIẾT ĐƠN HÀNG</h1>
+    <%= link_to list_donhangs_path, class: "back-btn" do %>
+      <i class="fas fa-arrow-left"></i> Quay lại
+    <% end %>
+  </div>
+
+  <div class="customer-info-section">
+    <h2>Thông Tin Khách Hàng</h2>
+    <table class="info-table">
+      <tr>
+        <td class="label">Họ tên</td>
+        <td><%= @donhang.user.username %></td>
+      </tr>
+      <tr>
+        <td class="label">Ngày đặt</td>
+        <td><%= @donhang.thoigiantao&.strftime("%Y-%m-%d") %></td>
+      </tr>
+      <tr>
+        <td class="label">Số điện thoại</td>
+        <td><%= @donhang.user.sdt %></td>
+      </tr>
+      <tr>
+        <td class="label">Địa chỉ</td>
+        <td><%= @donhang.user.diachi %></td>
+      </tr>
+      <tr>
+        <td class="label">Email</td>
+        <td><%= @donhang.user.email %></td>
+      </tr>
+      <tr>
+        <td class="label">Ghi chú</td>
+        <td><%= @donhang.ghichu.presence || "Không có" %></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="products-section">
+    <h2>Chi Tiết Sản Phẩm</h2>
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>Tên Sản Phẩm</th>
+          <th>Số Lượng</th>
+          <th>Giá Tiền</th>
+          <th>Thành Tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @donhang.chitietdonhang.each do |chitiet| %>
+          <tr>
+            <td><%= chitiet.tensanpham %></td>
+            <td><%= chitiet.soluong %></td>
+            <td><%= number_to_currency(chitiet.dongia, unit: "", precision: 0) %> VND</td>
+            <td><%= number_to_currency(chitiet.soluong * chitiet.dongia, unit: "", precision: 0) %> VND</td>
+          </tr>
+        <% end %>
+        <tr class="total-row">
+          <td colspan="3">Tổng Tiền</td>
+          <td><%= number_to_currency(@donhang.tongtien, unit: "", precision: 0) %> VND</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="order-status">
+    <p>Trạng thái hiện tại: <span class="status-badge <%= @donhang.trangthaidonhang&.downcase %>"><%= @donhang.trangthaidonhang %></span></p>
+    <div class="status-buttons">
+      <% ['Chưa xác nhận', 'Đã xác nhận', 'Đang giao hàng', 'Đã giao hàng', 'Đã thanh toán', 'Đã hủy'].each do |status| %>
+        <%= form_tag update_status_donhang_path(@donhang), method: :patch, class: 'inline-form', remote: true do %>
+          <%= hidden_field_tag :status, status %>
+          <% is_disabled = case @donhang.trangthaidonhang
+                          when 'Chưa xác nhận'
+                            !['Chưa xác nhận', 'Đã xác nhận', 'Đã hủy'].include?(status)
+                          when 'Đã xác nhận'
+                            !['Đã xác nhận', 'Đang giao hàng'].include?(status)
+                          when 'Đang giao hàng'
+                            !['Đang giao hàng', 'Đã giao hàng'].include?(status)
+                          when 'Đã giao hàng'
+                            !['Đã giao hàng', 'Đã thanh toán'].include?(status)
+                          when 'Đã thanh toán'
+                            true
+                          when 'Đã hủy'
+                            true
+                          end %>
+          <%= button_tag type: 'submit',
+              class: "status-btn #{status == 'Đã hủy' ? 'cancel-btn' : ''} #{@donhang.trangthaidonhang == status ? 'active' : ''} #{is_disabled ? 'disabled' : ''}",
+              disabled: is_disabled do %>
+            <%= status %>
+            <% if is_disabled %>
+              <i class="fas fa-lock"></i>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<style>
+.order-detail-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.order-header h1 {
+  color: #2c3e50;
+  font-size: 28px;
+  margin: 0;
+}
+
+.back-btn {
+  padding: 10px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover {
+  background: #2980b9;
+}
+
+.customer-info-section,
+.products-section {
+  margin-bottom: 30px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.info-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-table .label {
+  font-weight: bold;
+  width: 150px;
+  color: #7f8c8d;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.products-table th,
+.products-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.products-table th {
+  background-color: #f0f0f0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.total-row {
+  font-weight: bold;
+  background-color: #f8f9fa;
+}
+
+.total-row td {
+  padding: 15px;
+}
+
+.order-status {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.status-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #f0f0f0;
+  color: #7f8c8d;
+  cursor: pointer;
+  position: relative;
+  padding-right: 35px;
+}
+
+.status-btn .fa-lock {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+}
+
+.status-btn.active {
+  background: #2ecc71;
+  color: white;
+}
+
+.status-badge {
+  padding: 8px 15px;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+/* Status badge styles (reuse from your existing CSS) */
+.cho_xac_nhan { background-color: #fff8e1; color: #f39c12; border: 1px solid #ffeeba; }
+.da_xac_nhan { background-color: #e8f5e9; color: #27ae60; border: 1px solid #c8e6c9; }
+.dang_giao { background-color: #e3f2fd; color: #2980b9; border: 1px solid #bbdefb; }
+.da_giao { background-color: #e8f5e9; color: #2ecc71; border: 1px solid #c8e6c9; }
+.da_huy { background-color: #ffebee; color: #e74c3c; border: 1px solid #ffcdd2; }
+
+.status-btn.cancel-btn.active {
+  background: #e74c3c;
+  color: white;
+}
+
+.status-btn.disabled {
+  background: #d1d1d1;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.status-btn.disabled .fa-lock {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .order-detail-container {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .status-buttons {
+    flex-direction: column;
+  }
+
+  .status-btn {
+    width: 100%;
+  }
+
+  .products-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+.inline-form {
+  display: inline-block;
+  margin: 5px;
+}
+</style> 

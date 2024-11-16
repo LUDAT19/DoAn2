@@ -1,0 +1,66 @@
+<%= form_with(model: user, local: true) do |f| %>
+  <% if user.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(user.errors.count, "lỗi") %> đã xảy ra:</h4>
+      <ul>
+        <% user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :username, "Tên đăng nhập" %>
+    <%= f.text_field :username, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :sdt, "Số điện thoại" %>
+    <%= f.text_field :sdt, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :diachi, "Địa chỉ" %>
+    <%= f.text_area :diachi, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :loai_quyen, "Loại quyền" %>
+    <%= f.select :loai_quyen, 
+        User::QUYEN_TYPES.map { |type| [
+          case type
+          when 'admin' then 'Admin'
+          when 'staff' then 'Nhân viên'
+          when 'customer' then 'Khách hàng'
+          end,
+          type
+        ]},
+        {}, 
+        { class: "form-control", disabled: true }
+    %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :solandnthatbai, "Số lần đăng nhập thất bại" %>
+    <%= f.number_field :solandnthatbai, class: "form-control", min: 0, disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :isclock, "Trạng thái tài khoản" %>
+    <%= f.select :isclock, 
+        [['Hoạt động', 1], ['Đã khóa', 0]], 
+        {}, 
+        { class: "form-control", disabled: true } 
+    %>
+  </div>
+
+  <div class="form-actions">
+    <%= link_to "Quay lại", users_path, class: "btn btn-secondary" %>
+  </div>
+<% end %> 

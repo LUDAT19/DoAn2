@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* ... CSS khác ... */
+        
+        html {
+            scroll-behavior: smooth; /* Thêm hiệu ứng cuộn mượt */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="slider-logo">
+                <img src="<%= image_path('logo.png') %>" alt="Logo">
+            </div>
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Tìm kiếm...">
+                <button class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <ul class="navbar-list">
+                <li><a href="/" class="navbar-item">TRANG CHỦ</a></li>
+                <li><a href="/gioi_thieu" class="navbar-item">GIỚI THIỆU</a></li>
+                <li><a href="#" class="navbar-item">SẢN PHẨM</a></li>
+                <li><a href="#" class="navbar-item">DỊCH VỤ</a></li>
+                <li><a href="#" class="navbar-item">KIẾN THỨC CHĂN NUÔI</a></li>
+                <li><a href="#lienhe" class="navbar-item scroll-to-footer">LIÊN HỆ</a></li>
+                <li><%= link_to 'ĐĂNG NHẬP', dangnhap_path, class: 'navbar-item' %></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <!-- Slider -->
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slider-item active">
+                <img src="<%= image_path('anhnen.webp') %>" alt="Slider 1">
+            </div>
+            <div class="slider-item">
+                <img src="<%= image_path('anhnen_2.webp') %>" alt="Slider 2">
+            </div>
+            <div class="slider-item">
+                <img src="<%= image_path('anhnen_3.webp') %>" alt="Slider 3">
+            </div>           
+        </div>
+    </div>
+
+<!-- Danh sách sản phẩm -->
+    <section class="tieude">
+        <h1>Chào mừng đến với Cửa hàng Thuốc Thú Y</h1>
+        <p>Chúng tôi cung cấp các loại thuốc tốt nhất cho thú cưng của bạn!</p>
+    </section>
+
+     <section class="products">
+        <h2>SẢN PHẨM MÀ BẠN CÓ THỂ CẦN</h2>
+        
+        <div class="products-container">
+            <% @products.each do |product| %>
+                <div class="product-card">
+                    <div class="product-image">
+                        <% if product.image_path.present? %>
+                            <%= image_tag("/assets/#{product.image_path}") %>
+                        <% else %>
+                            <%= image_tag "default-product.jpg" %>
+                        <% end %>
+                        <div class="hover-buttons">
+                            <%= link_to 'Thêm vào giỏ', '#', class: 'btn add-to-cart' %>
+                            <%= link_to 'Mua ngay', '#', class: 'btn buy-now' %>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3><%= product.name %></h3>
+                        <p class="price"><%= number_to_currency(product.price, unit: 'đ', precision: 0, delimiter: '.') %></p>
+                        <%= link_to 'Xem chi tiết', product_path(product), class: 'view-details' %>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    </section>
+   
+    <!-- Footer -->
+    <div class="footer">
+        
+        <div class="footer-content">
+            <div class="office-contact footer-section">
+                <h3>Văn phòng liên hệ</h3>
+                <p><strong>Hà Nội:</strong> Lô A2CN2 Cụm CN Từ Liêm, P.Phương Canh, Q.Nam Từ Liêm, TP.Hà Nội.
+                    <span class="hotline"><a href="">Hotline: 19008198</a></span>
+                </p>
+                <p><strong>Hồ Chí Minh:</strong> Số 83 Lý Chiêu Hoàng, Phường 10, Quận 6, TP. Hồ Chí Minh.
+                    <span class="hotline"><a href="">Hotline: (84-28) 5555 9999</a></span>
+                </p>
+            </div>
+            <div class="centered-info">
+                <h3>CÔNG TY TNHH II THÀNH VIÊN THÚ Y VIỆT </h3>
+                <p>Email: <a href="mailto:info@thuyviet.com.vn">info@thuyviet.com.vn</a></p>
+                <p><a href="">Hotline: 0909900000</a> - Tư vấn miễn phí</p>
+            </div>
+            <div id="lienhe" class="social-media footer-section">
+                <h3>Liên hệ mạng xã hội</h3>
+                <div class="social-icons">
+                    <a href="" target="_blank" class="social-icon"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="" target="_blank" class="social-icon"><i class="fas fa-envelope"></i> Gmail</a>
+                    <a href="" target="_blank" class="social-icon"><i class="fab fa-youtube"></i> YouTube</a>
+                    <a href="" target="_blank" class="social-icon"><i class="fab fa-instagram"></i> Instagram</a>
+                </div>
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <p class="footer-bottom">© 2024 Thu y Viet. All rights reserved.</p>
+    </div>
+
+    <script>
+      document.querySelectorAll('.dropdown-toggle').forEach(item => {
+        item.addEventListener('click', event => {
+            event.preventDefault(); // Ngăn chặn hành động mặc định
+            const dropdownMenu = item.nextElementSibling; // Chọn menu tương ứng
+            dropdownMenu.classList.toggle('show'); // Thay đổi class
+        });
+        });
+
+        // Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".slider-item");
+
+        function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle("active", i === index);
+        });
+        }
+
+        function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        showSlide(currentSlide);
+        setInterval(nextSlide, 3000); // Tự động chuyển ảnh mỗi 3 giây
+        });
+
+        window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop; // Lấy vị trí cuộn hiện tại
+        console.log(`Scroll Top: ${scrollTop}, Last Scroll Top: ${lastScrollTop}`); // Thêm log
+
+        if (scrollTop > lastScrollTop) {
+            // Nếu cuộn xuống
+            navbar.style.top = '-80px'; // Ẩn thanh điều hướng
+        } else {
+            // Nếu cuộn lên
+            navbar.style.top = '0'; // Hiện thanh điều hướng
+        }
+
+        lastScrollTop = scrollTop; // Cập nhật vị trí cuộn cuối cùng
+        });
+
+        // Thêm smooth scroll cho link liên hệ
+        document.querySelector('.scroll-to-footer').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const footer = document.getElementById('lienhe');
+            const headerOffset = 80; // Chiều cao của navbar
+            const elementPosition = footer.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        });
+
+        // Thêm code xử lý giỏ hàng
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy số lượng hiện tại trong giỏ hàng
+            let currentCartCount = parseInt(document.getElementById('cart-count')?.textContent || '0');
+
+            // Xử lý sự kiện click "Thêm vào giỏ"
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const productCard = this.closest('.product-card');
+                    const productId = productCard.dataset.productId;
+
+                    // Tăng số lượng ngay lập tức trước khi gửi request
+                    currentCartCount += 1;
+                    updateCartCountDisplay(currentCartCount);
+
+                    fetch(`/cart/add/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Cập nhật lại số chính xác từ server (nếu cần)
+                            currentCartCount = data.cart_count;
+                            updateCartCountDisplay(currentCartCount);
+                            
+                            // Thông báo thành công
+                            showNotification('Đã thêm vào giỏ hàng!');
+                        } else {
+                            // Nếu có lỗi, giảm lại số lưng
+                            currentCartCount -= 1;
+                            updateCartCountDisplay(currentCartCount);
+                            showNotification(data.message || 'Có lỗi xảy ra', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Nếu có lỗi, giảm lại số lượng
+                        currentCartCount -= 1;
+                        updateCartCountDisplay(currentCartCount);
+                        showNotification('Có lỗi xảy ra khi thêm vào giỏ hàng', 'error');
+                    });
+                });
+            });
+
+            // Hàm cập nhật hiển thị số lượng giỏ hàng
+            function updateCartCountDisplay(count) {
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = count;
+                    // Thêm hiệu ứng
+                    cartCount.classList.add('update-animation');
+                    setTimeout(() => {
+                        cartCount.classList.remove('update-animation');
+                    }, 300);
+                }
+            }
+
+            // Hàm hiển thị thông báo
+            function showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                // Xóa thông báo sau 2 giây
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            }
+
+            // Thêm hàm kiểm tra và cập nhật hiển thị thông báo
+            function updateEmptyCartMessage() {
+                const checkedItems = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const emptyCartMessage = document.querySelector('.empty-cart-message');
+                
+                if (checkedItems > 0) {
+                    emptyCartMessage.style.display = 'none';
+                } else {
+                    emptyCartMessage.style.display = 'block';
+                }
+            }
+
+            // Thêm sự kiện cho tất cả các checkbox
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateEmptyCartMessage);
+            });
+
+            // Thêm sự kiện cho nút "Chọn tất cả"
+            const selectAllCheckbox = document.querySelector('.select-all-checkbox');
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    // Cập nhật trạng thái của tất cả các checkbox khác
+                    checkboxes.forEach(cb => {
+                        cb.checked = selectAllCheckbox.checked;
+                    });
+                    // Cập nhật hiển thị thông báo
+                    updateEmptyCartMessage();
+                });
+            }
+
+            // Gọi hàm updateEmptyCartMessage ngay khi trang tải xong
+            updateEmptyCartMessage();
+        });
+
+        function addToCart(productId, productName, productPrice, productImage) {
+            // Lấy token CSRF
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken
+                },
+                body: JSON.stringify({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    image_path: productImage
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật số lượng trong giỏ hàng
+                    const cartCount = document.querySelector('.cart-count');
+                    cartCount.textContent = data.cart_count;
+                    
+                    // Thêm hiệu ứng
+                    cartCount.classList.add('pulse');
+                    setTimeout(() => cartCount.classList.remove('pulse'), 500);
+                    
+                    // Hiển thị thông báo
+                    showNotification('Đã thêm vào giỏ hàng!', 'success');
+                } else {
+                    showNotification(data.message || 'Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Có lỗi xảy ra khi thêm vào giỏ hàng', 'error');
+            });
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Style cho notification
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                padding: '15px 25px',
+                borderRadius: '5px',
+                backgroundColor: type === 'success' ? '#4CAF50' : '#f44336',
+                color: 'white',
+                zIndex: '1000',
+                animation: 'slideIn 0.5s ease-out'
+            });
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Thêm CSS cho animation
+        const style = document.createElement('style');
+        style.textContent = `
+            .pulse {
+                animation: pulse 0.5s ease-in-out;
+            }
+
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+
+            .notification {
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

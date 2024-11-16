@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin khách hàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 1000px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #4e73df;
+            border: 3px solid #4e73df;
+        }
+
+        .profile-header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .profile-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-icon {
+            font-size: 1.5em;
+            color: #4e73df;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .address-card {
+            grid-column: 1 / -1;
+        }
+
+        .edit-profile-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-profile-btn:hover {
+            background: #2e59d9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-container {
+                margin: 100px 20px 30px;
+                padding: 20px;
+            }
+
+            .edit-profile-btn {
+                position: static;
+                margin-top: 20px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .back-btn {
+                position: static;
+                margin-bottom: 20px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .profile-container {
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        
+        
+        <div class="profile-header">
+            <%= link_to index2_path, class: 'back-btn' do %>
+                <i class="fas fa-arrow-left"></i>
+                Quay lại
+            <% end %>
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <h1>Thông tin tài khoản</h1>
+            <p>Xem và quản lý thông tin cá nhân của bạn</p>
+            <button class="edit-profile-btn" onclick="window.location.href='<%= edit_profile_path %>'">
+                <i class="fas fa-edit"></i>
+                Chỉnh sửa
+            </button>
+        </div>
+
+        <div class="profile-content">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="info-label">Tên đăng nhập</span>
+                <div class="info-value"><%= @user.username %></div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <span class="info-label">Email</span>
+                <div class="info-value"><%= @user.email %></div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <span class="info-label">Số điện thoại</span>
+                <div class="info-value"><%= @user.sdt || 'Chưa cập nhật' %></div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <span class="info-label">Trạng thái tài khoản</span>
+                <div class="info-value">
+                    Đã xác thực
+                    <div class="status-badge">
+                        <i class="fas fa-check"></i> Hoạt động
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card address-card">
+                <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <span class="info-label">Địa chỉ</span>
+                <div class="info-value"><%= @user.diachi || 'Chưa cập nhật' %></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

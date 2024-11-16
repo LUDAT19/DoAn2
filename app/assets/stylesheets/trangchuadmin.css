@@ -1,0 +1,240 @@
+/* Thiết lập chung cho tất cả phần tử */
+
+* {
+    box-sizing: border-box;
+    /* Đảm bảo padding và border không làm tăng kích thước phần tử */
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Thân trang */
+
+body {
+    font-family: Arial, sans-serif;
+    /* Font chữ cơ bản */
+    background-color: #f4f4f4;
+    /* Màu nền cho toàn bộ trang */
+    color: #333;
+    /* Màu chữ chung */
+}
+
+
+/* Bố cục chính */
+
+.admin-container {
+    display: flex;
+    /* Sử dụng flexbox để bố trí sidebar và nội dung chính */
+    height: 100vh;
+    /* Chiều cao bằng 100% viewport */
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    width: 250px;
+    /* Độ rộng của sidebar */
+    background-color: #ffffff;
+    /* Màu nền cho sidebar */
+    color: #4e73df;
+    /* Màu chữ trong sidebar */
+    padding: 20px;
+    /* Khoảng cách bên trong sidebar */
+    border-right: 1px solid #ddd;
+    /* Đường viền bên phải cho sidebar */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    /* Bóng đổ cho sidebar */
+    transition: background-color 0.3s;
+    /* Hiệu ứng chuyển màu nền */
+}
+
+.sidebar:hover {
+    background-color: #f0f0f0;
+    /* Màu nền khi hover */
+}
+
+.sidebar-title {
+    text-align: center;
+    /* Căn giữa tiêu đề */
+    margin-bottom: 20px;
+    /* Khoảng cách dưới tiêu đề */
+    font-size: 24px;
+    /* Kích thước chữ lớn hơn cho tiêu đề */
+    color: #4e73df;
+    /* Màu cho tiêu đề */
+}
+
+
+/* Menu chính */
+
+.menu {
+    list-style-type: none;
+    /* Xóa dấu đầu dòng của danh sách */
+}
+
+
+/* Mục menu */
+
+.menu-item {
+    position: relative;
+    /* Đặt vị trí tương đối cho li để submenu có thể được định vị */
+    margin-bottom: 10px;
+    /* Khoảng cách giữa các mục menu */
+}
+
+.menu-link {
+    display: block;
+    /* Đặt khối cho các liên kết */
+    color: #4e73df;
+    /* Màu chữ cho liên kết */
+    padding: 12px 15px;
+    /* Khoảng cách cho các liên kết */
+    text-decoration: none;
+    /* Xóa gạch chân */
+    transition: background-color 0.3s, color 0.3s;
+    /* Hiệu ứng chuyển màu nền và chữ */
+    font-size: 18px;
+    /* Kích thước chữ lớn hơn cho các liên kết menu */
+    font-weight: bold;
+    /* Đậm chữ */
+    border-radius: 5px;
+    /* Bo góc cho các liên kết */
+}
+
+.menu-link:hover {
+    background-color: #e2e6ea;
+    /* Màu nền khi hover */
+    color: #0056b3;
+    /* Đổi màu chữ khi hover */
+}
+
+
+/* Submenu */
+
+.submenu {
+    list-style-type: none;
+    /* Xóa dấu đầu dòng cho submenu */
+    width: 250px;
+    /* Độ rộng submenu */
+    padding-left: 15px;
+    /* Khoảng cách bên trái cho submenu */
+    display: none;
+    /* Ẩn submenu mặc định */
+    position: absolute;
+    /* Định vị tuyệt đối cho submenu */
+    left: 100%;
+    /* Đưa submenu ra bên phải của menu item */
+    top: 10px;
+    /* Căn trên cùng */
+    background-color: #ffffff;
+    /* Màu nền cho submenu */
+    z-index: 1;
+    /* Đảm bảo submenu nằm trên các phần tử khác */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Bóng đổ cho submenu */
+    border-radius: 5px;
+    /* Bo góc cho submenu */
+    height: auto;
+}
+
+
+/* Hiển thị submenu khi hover vào menu item */
+
+.menu-item:hover .submenu {
+    display: block;
+    /* Hiển thị submenu */
+}
+
+
+/* Mục submenu */
+
+.submenu-item {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    /* Khoảng cách giữa các mục submenu */
+}
+
+.submenu li a {
+    color: #4e73df;
+    /* Màu chữ cho liên kết submenu */
+    padding: 10px 15px;
+    /* Khoảng cách cho liên kết submenu */
+    border-radius: 5px;
+    /* Bo góc cho liên kết submenu */
+}
+
+.submenu li a:hover {
+    background-color: #e2e6ea;
+    /* Màu nền khi hover vào liên kết submenu */
+}
+
+
+/* Nội dung chính */
+
+.main-content {
+    flex: 1;
+    /* Nội dung chính chiếm không gian còn lại */
+    padding: 20px;
+    /* Khoảng cách bên trong nội dung chính */
+    background-color: white;
+    /* Màu nền cho nội dung chính */
+    overflow-y: auto;
+    /* Cuộn dọc nếu nội dung vượt quá chiều cao */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Bóng đổ cho nội dung chính */
+    border-radius: 5px;
+    /* Bo góc cho nội dung chính */
+}
+
+.main-title {
+    margin-bottom: 20px;
+    /* Khoảng cách dưới tiêu đề chính */
+    color: #4e73df;
+    /* Màu chữ cho tiêu đề chính */
+    font-size: 26px;
+    /* Kích thước chữ lớn hơn cho tiêu đề chính */
+    border-bottom: 2px solid #4e73df;
+    /* Đường gạch chân cho tiêu đề chính */
+    padding-bottom: 10px;
+    /* Khoảng cách dưới đường gạch chân */
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+        /* Chuyển bố trí sang dạng cột trên thiết bị di động */
+    }
+    .sidebar {
+        width: 100%;
+        /* Sidebar chiếm 100% chiều rộng trên thiết bị di động */
+    }
+}
+
+
+/* Thêm style mới cho submenu-link */
+
+.submenu-link {
+    display: block;
+    color: #4e73df !important;
+    /* Đảm bảo màu chữ luôn là màu xanh */
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.submenu-link:hover {
+    background-color: #e2e6ea;
+    color: #0056b3 !important;
+}
+
+
+/* Style cho menu item có submenu */
+
+.menu-item:hover .submenu {
+    display: block;
+}

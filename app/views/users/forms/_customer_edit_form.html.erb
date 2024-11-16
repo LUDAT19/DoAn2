@@ -1,0 +1,66 @@
+<%= form_with(model: user, local: true) do |f| %>
+  <%= render 'shared/error_messages', object: user %>
+
+  <div class="form-group">
+    <%= f.label :username, "Tên đăng nhập" %>
+    <%= f.text_field :username, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email, "Email" %>
+    <%= f.email_field :email, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :sdt, "Số điện thoại" %>
+    <%= f.text_field :sdt, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :diachi, "Địa chỉ" %>
+    <%= f.text_area :diachi, class: "form-control", disabled: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :loai_quyen, "Loại quyền" %>
+    <%= f.select :loai_quyen, 
+        User::QUYEN_TYPES.map { |type| [
+          case type
+          when 'staff' then 'Nhân viên'
+          when 'customer' then 'Khách hàng'
+          end,
+          type
+        ]},
+        {}, 
+        { class: "form-control" }
+    %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :solandnthatbai, "Số lần đăng nhập thất bại" %>
+    <%= f.number_field :solandnthatbai, class: "form-control", min: 0 %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :isclock, "Trạng thái tài khoản" %>
+    <% if user.solandnthatbai.to_i >= 5 %>
+      <%= f.select :isclock, 
+          [['Đã khóa (Đăng nhập sai)', 0]], 
+          {}, 
+          { class: "form-control"} 
+      %>
+      <small class="text-danger">Tài khoản đã bị khóa do đăng nhập sai quá 5 lần</small>
+    <% else %>
+      <%= f.select :isclock, 
+          [['Hoạt động', 1], ['Đã khóa', 0]], 
+          {}, 
+          { class: "form-control" } 
+      %>
+    <% end %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Cập nhật", class: "btn btn-primary" %>
+    <%= link_to "Hủy", users_path, class: "btn btn-secondary" %>
+  </div>
+<% end %> 

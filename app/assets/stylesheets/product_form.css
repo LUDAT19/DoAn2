@@ -1,0 +1,199 @@
+.product-form-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Header styles */
+
+.header-container {
+    width: 100%;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    padding: 20px 30px;
+    border-radius: 8px;
+    margin-bottom: 35px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.header-left {
+    width: 150px;
+}
+
+.header-center {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.header-center h2 {
+    margin: 0;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Form group styles */
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: #2575fc;
+    outline: 0;
+    box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.1);
+    background-color: white;
+}
+
+
+/* Textarea specific */
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+
+/* Select specific */
+
+select.form-control {
+    height: 48px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M0 2l4 4 4-4' fill='none' stroke='%23343a40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    padding-right: 40px;
+    appearance: none;
+}
+
+
+/* Form actions */
+
+.form-actions {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 2px solid #e9ecef;
+    display: flex;
+    gap: 15px;
+}
+
+
+/* Button styles */
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 117, 252, 0.3);
+}
+
+.btn-secondary {
+    background-color: #e9ecef;
+    color: #2c3e50;
+}
+
+.btn-secondary:hover {
+    background-color: #dee2e6;
+    transform: translateY(-2px);
+}
+
+
+/* Alert styles */
+
+.alert {
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    border: none;
+}
+
+.alert-danger {
+    background-color: #fff5f5;
+    color: #c53030;
+    border-left: 4px solid #fc8181;
+}
+
+.alert-danger h4 {
+    margin-top: 0;
+    color: inherit;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.alert-danger ul {
+    margin-bottom: 0;
+    padding-left: 20px;
+}
+
+.alert-danger li {
+    margin-bottom: 5px;
+}
+
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+    .product-form-container {
+        padding: 20px;
+        margin: 10px;
+    }
+    .header-container {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .header-left {
+        width: 100%;
+        text-align: center;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}

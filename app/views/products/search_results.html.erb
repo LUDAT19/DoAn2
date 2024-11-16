@@ -1,0 +1,15 @@
+<div class="search-results">
+  <h2>Kết quả tìm kiếm cho "<%= @query %>"</h2>
+  
+  <% if @products.any? %>
+    <div class="products-container">
+      <% @products.each do |product| %>
+        <div class="product-card" data-product-id="<%= product.id %>">
+          <!-- Use your existing product card layout here -->
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>Không tìm thấy sản phẩm phù hợp.</p>
+  <% end %>
+</div> 

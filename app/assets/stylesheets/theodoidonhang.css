@@ -1,0 +1,244 @@
+.text-center.mb-4.text-uppercase.fw-bold {
+    text-align: center;
+    font-size: 30px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.table-responsive {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    margin-top: -12px;
+}
+
+.table thead tr {
+    background-color: #4e73df;
+    color: white;
+}
+
+.table thead th {
+    border: none;
+    padding: 15px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.table tbody tr {
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.table tbody td {
+    border: none;
+    padding: 20px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+
+/* Status badges */
+
+.status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-cancelled {
+    background-color: #ffe5e5;
+    color: #dc3545;
+}
+
+.status-confirmed {
+    background-color: #e5f7ed;
+    color: #198754;
+}
+
+.status-pending {
+    background-color: #fff8e5;
+    color: #ffc107;
+}
+
+.status-shipping {
+    background-color: #e5f0ff;
+    color: #0d6efd;
+}
+
+.status-delivered {
+    background-color: #e5f7ed;
+    color: #198754;
+}
+
+.status-completed {
+    background-color: #e5f7ed;
+    color: #198754;
+}
+
+
+/* Cancel button */
+
+.btn-cancel {
+    padding: 8px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100px;
+    text-align: center;
+}
+
+
+/* Active state */
+
+.btn-cancel.active {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-cancel.active:hover {
+    background-color: #bb2d3b;
+    transform: translateY(-1px);
+}
+
+
+/* Disabled state */
+
+.btn-cancel.disabled {
+    background-color: #e2e6ea;
+    color: #6c757d;
+    cursor: not-allowed;
+    pointer-events: none;
+    border: none;
+}
+
+
+/* Back button */
+
+.btn-back {
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    margin: 20px;
+    padding: 10px 20px;
+    background-color: #4e73df;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+
+.btn-back:hover {
+    background-color: #4262c5;
+    color: white;
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+    .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+    }
+    .table tbody td {
+        display: block;
+        text-align: right;
+        padding: 12px 15px;
+        position: relative;
+    }
+    .table tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        font-weight: bold;
+    }
+}
+
+
+/* Header styling */
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 0 5%;
+}
+
+.back-button {
+    width: 120px;
+    /* Điều chỉnh độ rộng phù hợp */
+}
+
+.page-title {
+    margin: 0;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.placeholder {
+    width: 120px;
+    /* Giữ cân đối với back-button */
+}
+
+
+/* Responsive adjustments */
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .back-button {
+        width: auto;
+        order: 2;
+        /* Đưa nút quay lại xuống dưới */
+    }
+    .page-title {
+        order: 1;
+        /* Đưa tiêu đề lên trên */
+    }
+    .placeholder {
+        display: none;
+        /* Ẩn placeholder trên mobile */
+    }
+}
+
+
+/* Thêm style cho form button_to để đảm bảo nút căn đều */
+
+form {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}

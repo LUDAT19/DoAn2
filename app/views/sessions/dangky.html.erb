@@ -1,0 +1,56 @@
+<%= stylesheet_link_tag 'dangky' %>
+<% if flash[:error] %>
+  <div class="alert alert-danger">
+    <%= flash[:error] %>
+  </div>
+<% end %>
+
+<%= form_with(
+    url: dangky_path, 
+    method: :post, 
+    local: true, 
+    data: { turbo: false }, 
+    html: { 
+      enctype: 'multipart/form-data', 
+      class: 'form_dk' 
+    }
+) do %>
+    <div class="imgcontainer">
+      <span onclick="window.location.href='/'" class="close" title="Close Modal">&times;</span>
+    </div>
+  <p class="header">ĐĂNG KÝ TÀI KHOẢN</p>
+  <table class="thongtin-dangky">
+    <tr class="form-group">
+      <th><label for="username">Tên người dùng:</label> <span style="color: red;">*</span></th>
+      <td colspan="3"><input type="text" class="form-control" id="username" name="nguoidung[username]" required></td>
+    </tr>
+    <tr class="form-group">
+      <th><label for="sdt">Số điện thoại:</label><span style="color: red;">*</span></th>
+      <td><input type="number" class="form-control" id="sdt" name="nguoidung[sdt]" min="0" required></td>
+      <th><label for="email">Email:</label><span style="color: red;">*</span></th>
+      <td><input type="email" class="form-control" id="email" name="nguoidung[email]" placeholder="Nhập Email của bạn" required></td>
+    </tr>
+    <tr class="form-group">
+      <th><label for="mat_khau">Mật khẩu:</label><span style="color: red;">*</span></th>
+      <td><input type="password" class="form-control" id="mat_khau" name="nguoidung[password_pidget]" required></td>
+    </tr>
+    <tr class="form-group">
+      <th><label for="dia_chi">Địa chỉ:</label><span style="color: red;">*</span></th>
+      <td colspan="3"><input type="text" class="form-control" id="dia_chi" name="nguoidung[diachi]" required></td>
+    </tr>
+    <tr class="form-group">
+      <input type="hidden" name="nguoidung[loai_quyen]" value="2">
+      <td colspan="4"><button type="submit" class="btn btn-primary">Đăng ký</button></td>
+    </tr>
+    <tr class="form-group">
+      <td colspan="4">
+        <p style="text-align: center;">Đã có tài khoản? <%= link_to 'Đăng nhập', dangnhap_path, style: "color: red;" %></p>
+      </td>
+    </tr>
+    <tr class="form-group">
+      <td colspan="2" style="display: flex; width: 160px; margin-top: 12%;">
+        <p style="padding-left: 5px;"><%= link_to 'Về trang chủ', root_path %></p>
+      </td>
+    </tr>
+  </table>
+<% end %>

@@ -1,0 +1,52 @@
+<%= stylesheet_link_tag 'products', media: 'all' %>
+<div class="products-container">
+  <div class="header-container">
+    <div class="header-left">
+      <%= link_to 'Quay lại', index3_path, class: 'btn btn-secondary' %>
+    </div>
+    <div class="header-center">
+      <h2>Danh Sách Sản Phẩm</h2>
+    </div>
+    <div class="header-right">
+      <%= link_to 'Thêm Sản Phẩm Mới', new_product_path, class: 'btn btn-primary' %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Tên sản phẩm</th>
+        <th>Danh mục</th>
+        <th>Mô tả</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= product.danhmucsanpham&.ten_danhmuc %></td>
+          <td><%= product.mota %></td>
+          <td><%= number_to_currency(product.price, unit: 'đ', precision: 0, delimiter: '.') %></td>
+          <td><%= product.soluong %></td>
+          <td>
+            <%= link_to 'Sửa', edit_product_path(product), class: 'btn btn-sm btn-warning' %>
+            <%= button_to 'Xóa', product_path(product), 
+                method: :delete,
+                form: { style: "display: inline-block;" },
+                form: { data: { turbo_confirm: 'Bạn có chắc chắn muốn xóa sản phẩm này?' } },
+                class: 'btn btn-sm btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div> 

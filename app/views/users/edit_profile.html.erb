@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa thông tin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .edit-container {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .edit-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .edit-header h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .edit-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 2px rgba(78, 115, 223, 0.2);
+            outline: none;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1.1em;
+        }
+
+        .password-toggle:hover {
+            color: #4e73df;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .save-btn {
+            background: #4e73df;
+            color: white;
+            border: none;
+        }
+
+        .save-btn:hover {
+            background: #2e59d9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+        .cancel-btn {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            text-decoration: none;
+        }
+
+        .cancel-btn:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <div class="edit-header">
+            <h1>Chỉnh sửa thông tin</h1>
+            <p>Cập nhật thông tin cá nhân của bạn</p>
+        </div>
+
+        <%= form_with(model: @user, url: update_profile_path, local: true) do |f| %>
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <%= f.text_field :username, class: 'form-control', placeholder: "Nhập tên đăng nhập" %>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <%= f.email_field :email, class: 'form-control', placeholder: "Nhập email" %>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <div class="password-field">
+                    <%= f.password_field :password_pidget, class: 'form-control', 
+                        placeholder: "Nhập mật khẩu", value: @user.password_pidget %>
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sdt">Số điện thoại</label>
+                <%= f.text_field :sdt, class: 'form-control', placeholder: "Nhập số điện thoại" %>
+            </div>
+
+            <div class="form-group">
+                <label for="diachi">Địa chỉ</label>
+                <%= f.text_field :diachi, class: 'form-control', placeholder: "Nhập địa chỉ" %>
+            </div>
+
+            <div class="form-buttons">
+                <%= f.submit 'Lưu thay đổi', class: 'save-btn' %>
+                <%= link_to user_profile_path, class: 'cancel-btn' do %>
+                    <i class="fas fa-times"></i>
+                    Hủy
+                <% end %>
+            </div>
+        <% end %>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.querySelector('input[type="password"]');
+            const toggleButton = document.querySelector('.password-toggle i');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.classList.remove('fa-eye');
+                toggleButton.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type === 'password';
+                toggleButton.classList.remove('fa-eye-slash');
+                toggleButton.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>
